@@ -36,14 +36,17 @@ class Engine {
     this.logAfter('init');
   }
   logBefore(command) {
+    //eslint-disable-next-line
     console.log('logBefore ', command);
     this.state.count[command]++;
     this.state.tempTime[command] = new Date();
   }
   logAfter(command) {
+    //eslint-disable-next-line
     console.log('logAfter ', command);
     this.state.totalTime[command] += new Date() - this.state.tempTime[command];
     this.state.tempTime[command] = 0;
+    //eslint-disable-next-line
     console.log(this.state);
   }
   use_uci() {
@@ -105,6 +108,7 @@ class Engine {
   }
 
   go_infinite() {
+    //eslint-disable-next-line
     // TODO: decide if we should implement this
     return null;
   }
@@ -121,7 +125,8 @@ class Engine {
     this.logAfter('quit');
   }
 }
-
+//eslint-disable-next-line
 module.exports = Engine;
+//eslint-disable-next-line
 module.exports.Stockfish = Engine;
 // export default Engine;
