@@ -1,0 +1,176 @@
+/*
+ * Chessground base css properties.
+ *
+ * You need to include the css files in themes folder in order to have the
+ * board and pieces displayed!
+ */
+
+.main-board {
+  grid-area: board;
+  position: relative;
+  display: block;
+  height: 0;
+  padding-bottom: 100%;
+  width: 100%;
+}
+
+.cg-wrap {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+cg-helper {
+  position: absolute;
+  width: 12.5%;
+  padding-bottom: 12.5%;
+  display: table; /* hack: round to full pixel size in chrome */
+  bottom: 0;
+}
+
+cg-container {
+  position: absolute;
+  width: 800%;
+  height: 800%;
+  display: block;
+  bottom: 0;
+}
+
+cg-board {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  line-height: 0;
+  background-size: cover;
+  cursor: pointer;
+}
+.cursor-wait cg-board {
+  cursor: wait;
+}
+
+cg-board square {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12.5%;
+  height: 12.5%;
+  pointer-events: none;
+}
+cg-board square.last-move {
+  will-change: transform;
+  background-color: rgba(246, 246, 130, 0.5);
+}
+.correct cg-board square.last-move {
+  background-color: rgba(155, 240, 0, 0.4);
+}
+.incorrect cg-board square.last-move {
+  background-color: rgba(240, 0, 0, 0.4);
+}
+
+cg-board square.check {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 0, 0, 1) 0%,
+    rgba(231, 0, 0, 1) 25%,
+    rgba(169, 0, 0, 0) 89%,
+    rgba(158, 0, 0, 0) 100%
+  );
+}
+cg-board square.current-premove {
+  background-color: rgba(20, 30, 85, 0.5);
+}
+.neo .cg-wrap piece {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12.5%;
+  height: 12.5%;
+  background-size: cover;
+  z-index: 2;
+  will-change: transform;
+  pointer-events: none;
+}
+cg-board piece.dragging {
+  cursor: move;
+  z-index: 9;
+}
+cg-board piece.anim {
+  z-index: 8;
+}
+cg-board piece.fading {
+  z-index: 1;
+  opacity: 0.5;
+}
+.neo .cg-wrap piece.ghost {
+  opacity: 0.3;
+}
+.cg-wrap svg {
+  overflow: hidden;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.6;
+}
+.cg-wrap svg image {
+  opacity: 0.5;
+}
+
+/*
+ * Board
+ */
+.brown .cg-wrap cg-board {
+  background-image: url('/chess/board/brown.svg');
+}
+.green .cg-wrap cg-board {
+  background-image: url('/chess/board/green.svg');
+}
+
+/**
+ * Pieces
+ */
+.neo .cg-wrap piece.pawn.white {
+  background-image: url('/chess/pieces/neo/wP.png');
+}
+.neo .cg-wrap piece.bishop.white {
+  background-image: url('/chess/pieces/neo/wB.png');
+}
+.neo .cg-wrap piece.knight.white {
+  background-image: url('/chess/pieces/neo/wN.png');
+}
+.neo .cg-wrap piece.rook.white {
+  background-image: url('/chess/pieces/neo/wR.png');
+}
+.neo .cg-wrap piece.queen.white {
+  background-image: url('/chess/pieces/neo/wQ.png');
+}
+.neo .cg-wrap piece.king.white {
+  background-image: url('/chess/pieces/neo/wK.png');
+}
+.neo .cg-wrap piece.pawn.black {
+  background-image: url('/chess/pieces/neo/bP.png');
+}
+.neo .cg-wrap piece.bishop.black {
+  background-image: url('/chess/pieces/neo/bB.png');
+}
+.neo .cg-wrap piece.knight.black {
+  background-image: url('/chess/pieces/neo/bN.png');
+}
+.neo .cg-wrap piece.rook.black {
+  background-image: url('/chess/pieces/neo/bR.png');
+}
+.neo .cg-wrap piece.queen.black {
+  background-image: url('/chess/pieces/neo/bQ.png');
+}
+.neo .cg-wrap piece.king.black {
+  background-image: url('/chess/pieces/neo/bK.png');
+}
