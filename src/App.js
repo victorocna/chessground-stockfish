@@ -5,11 +5,14 @@ import { Stockfish } from './stockfish';
 import { engineMove } from './functions';
 
 const App = () => {
-  const [game, setGame] = useState(new Chess());
+  const [game] = useState(new Chess());
+  const [fen, setFen] = useState(game.fen());
 
   const onMove = async (from, to) => {
+    // TODO: only valid moves
+
     game.move({ from, to, promotion: 'q' });
-    setGame(game);
+    setFen(game.fen());
 
     await opponentMove();
   };
@@ -19,7 +22,7 @@ const App = () => {
     const bestMove = engineMove(await engine.go_time(1000));
 
     game.move(bestMove);
-    setGame(game);
+    setFen(game.fen());
   };
 
   const engine = new Stockfish('/stockfish/stockfish.asm.js');
@@ -34,10 +37,9 @@ const App = () => {
   return (
     <div className="App">
       <div className="grid lg:grid-cols-2 gap-4 mb-4">
-        <div>
-          <Chessboard fen={game.fen()} onMove={onMove} coordinates />
+        <div className="m-4">
+          <Chessboard fen={fen} onMove={onMove} coordinates />
         </div>
-        <h1>Hello world</h1>
       </div>
     </div>
   );
