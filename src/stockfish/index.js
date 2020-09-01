@@ -2,27 +2,69 @@
 
 class Engine {
   constructor(scriptPath) {
-    this.worker = new Worker(scriptPath);
+    if (!window.chessEngineWorker) {
+      window.chessEngineWorker = new Worker(scriptPath);
+    }
+    this.activity = this.state = {
+      count: {
+        init: 0,
+        use_uci: 0,
+        is_ready: 0,
+        set_position: 0,
+        go_depth: 0,
+        go_time: 0,
+        stop: 0,
+        quit: 0,
+      },
+      totalTime: {
+        init: 0,
+        use_uci: 0,
+        is_ready: 0,
+        set_position: 0,
+        go_depth: 0,
+        go_time: 0,
+        stop: 0,
+        quit: 0,
+      },
+      tempTime: {},
+    };
   }
   async init() {
+    this.logBefore('init');
     await this.use_uci();
     await this.is_ready();
+    this.logAfter('init');
+  }
+  logBefore(command) {
+    console.log('logBefore ', command);
+    this.state.count[command]++;
+    this.state.tempTime[command] = new Date();
+  }
+  logAfter(command) {
+    console.log('logAfter ', command);
+    this.state.totalTime[command] += new Date() - this.state.tempTime[command];
+    this.state.tempTime[command] = 0;
+    console.log(this.state);
   }
   use_uci() {
     return new Promise((resolve) => {
-      this.worker.postMessage('uci');
-      this.worker.onmessage = (message) => {
+      this.logBefore('use_uci');
+      window.chessEngineWorker.postMessage('uci');
+      window.chessEngineWorker.onmessage = (message) => {
         if (message.data === 'uciok') {
+          this.logAfter('use_uci');
           resolve(message);
         }
       };
     });
   }
   is_ready() {
+    this.logBefore('is_ready');
     return new Promise((resolve) => {
-      this.worker.postMessage('isready');
-      this.worker.onmessage = (message) => {
+      window.chessEngineWorker.postMessage('isready');
+      window.chessEngineWorker.onmessage = (message) => {
         if (message.data === 'readyok') {
+          this.logAfter('is_ready');
           resolve(message);
         }
       };
@@ -30,16 +72,20 @@ class Engine {
   }
   set_position(fen) {
     return new Promise((resolve) => {
-      this.worker.postMessage('position fen ' + fen);
+      this.logBefore('set_position');
+      window.chessEngineWorker.postMessage('position fen ' + fen);
+      this.logAfter('set_position');
       resolve();
     });
   }
 
   go_depth(depth) {
     return new Promise((resolve) => {
-      this.worker.postMessage('go depth ' + depth);
-      this.worker.onmessage = (message) => {
+      this.logBefore('go_depth');
+      window.chessEngineWorker.postMessage('go depth ' + depth);
+      window.chessEngineWorker.onmessage = (message) => {
         if (message.data.startsWith('bestmove')) {
+          this.logAfter('go_depth');
           resolve(message.data);
         }
       };
@@ -47,9 +93,11 @@ class Engine {
   }
   go_time(time) {
     return new Promise((resolve) => {
-      this.worker.postMessage('go movetime ' + time);
-      this.worker.onmessage = (message) => {
+      this.logBefore('go_time');
+      window.chessEngineWorker.postMessage('go movetime ' + time);
+      window.chessEngineWorker.onmessage = (message) => {
         if (message.data.startsWith('bestmove')) {
+          this.logAfter('go_time');
           resolve(message.data);
         }
       };
@@ -62,11 +110,15 @@ class Engine {
   }
 
   stop() {
-    this.worker.postMessage('stop');
+    this.logBefore('stop');
+    window.chessEngineWorker.postMessage('stop');
+    this.logAfter('stop');
   }
 
   quit() {
-    this.worker.postMessage('quit');
+    this.logBefore('quit');
+    window.chessEngineWorker.postMessage('quit');
+    this.logAfter('quit');
   }
 }
 

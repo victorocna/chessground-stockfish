@@ -7,7 +7,9 @@ import { engineMove } from './functions';
 const App = () => {
   const [game] = useState(new Chess());
   const [fen, setFen] = useState(game.fen());
-
+  const [engine, setEngine] = useState(
+    new Stockfish('/stockfish/stockfish.asm.js')
+  );
   const onMove = async (from, to) => {
     // TODO: only valid moves
 
@@ -18,6 +20,7 @@ const App = () => {
   };
 
   const opponentMove = async () => {
+    console.log('opp moved');
     await engine.set_position(game.fen());
     const bestMove = engineMove(await engine.go_time(1000));
 
@@ -25,7 +28,6 @@ const App = () => {
     setFen(game.fen());
   };
 
-  const engine = new Stockfish('/stockfish/stockfish.asm.js');
   useEffect(() => {
     engine.init();
   }, []);
