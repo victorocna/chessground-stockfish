@@ -5,7 +5,7 @@ class Engine {
     if (!window.chessEngineWorker) {
       window.chessEngineWorker = new Worker(scriptPath);
     }
-    this.skillLevel = skillLevel || 20;
+    this.skillLevel = skillLevel === 0 ? 0 : skillLevel ? skillLevel : 20;
     this.activity = this.state = {
       count: {
         init: 0,
@@ -31,8 +31,27 @@ class Engine {
     };
   }
   setSkillLevel() {
+    /**
+     * skill level is 0-20, higher the stronger
+     * skill level maximum error is 0-5000, lower the stronger
+     * skill level probability is 1-1000, the higher the stronger
+     * seems to be working with max value for maxError and min value for probability
+     */
+    /**
+     * OLD WAY OF COMPUTING SKILL LEVEL VALUES;
+     * const maxError = (20 - this.skillLevel) * 250;
+     * const probability = 1000 - (20 - this.skillLevel) * 50;
+     */
+    const maxError = 5000;
+    const probability = 1;
     window.chessEngineWorker.postMessage(
       'setoption name Skill Level value ' + this.skillLevel
+    );
+    window.chessEngineWorker.postMessage(
+      'setoption name Skill Level Maximum Error value ' + maxError
+    );
+    window.chessEngineWorker.postMessage(
+      'setoption name Skill Level Probability value ' + probability
     );
   }
   async init() {
@@ -62,6 +81,8 @@ class Engine {
       window.chessEngineWorker.postMessage('uci');
 
       window.chessEngineWorker.onmessage = (message) => {
+        //eslint-disable-next-line
+        console.log(message.data);
         if (message.data === 'uciok') {
           this.logAfter('use_uci');
           resolve(message);
@@ -74,6 +95,8 @@ class Engine {
     return new Promise((resolve) => {
       window.chessEngineWorker.postMessage('isready');
       window.chessEngineWorker.onmessage = (message) => {
+        //eslint-disable-next-line
+        console.log(message.data);
         if (message.data === 'readyok') {
           this.logAfter('is_ready');
           resolve(message);
@@ -95,6 +118,8 @@ class Engine {
       this.logBefore('go_depth');
       window.chessEngineWorker.postMessage('go depth ' + depth);
       window.chessEngineWorker.onmessage = (message) => {
+        //eslint-disable-next-line
+        console.log(message.data);
         if (message.data.startsWith('bestmove')) {
           this.logAfter('go_depth');
           resolve(message.data);
@@ -107,6 +132,8 @@ class Engine {
       this.logBefore('go_time');
       window.chessEngineWorker.postMessage('go movetime ' + time);
       window.chessEngineWorker.onmessage = (message) => {
+        //eslint-disable-next-line
+        console.log(message.data);
         if (message.data.startsWith('bestmove')) {
           this.logAfter('go_time');
           resolve(message.data);
