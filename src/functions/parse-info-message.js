@@ -21,7 +21,7 @@ const getPV = (message) => {
   if (!message) {
     return '';
   }
-  return message.split(' pv ')[1];
+  return message.split(' pv ')[1].split(' bmc')[0];
 };
 
 export default { getDepth, getPV, getScore };
