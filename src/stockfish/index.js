@@ -1,10 +1,11 @@
 // For stockfish, scriptPath should be stockfish.asm.js --> Pay attention to .asm.js
 
 class Engine {
-  constructor({ scriptPath, skillLevel }) {
+  constructor({ scriptPath, skillLevel, onInfoMessage }) {
     if (!window.chessEngineWorker) {
       window.chessEngineWorker = new Worker(scriptPath);
     }
+    this.onInfoMessage = onInfoMessage || console.log;
     this.skillLevel = skillLevel === 0 ? 0 : skillLevel ? skillLevel : 20;
     this.activity = this.state = {
       count: {
@@ -29,6 +30,12 @@ class Engine {
       },
       tempTime: {},
     };
+  }
+  isInfoMessage(message) {
+    if (!message || !message.data) {
+      return false;
+    }
+    return message.data.startsWith('info');
   }
   setSkillLevel() {
     /**
@@ -101,6 +108,10 @@ class Engine {
     return new Promise((resolve) => {
       window.chessEngineWorker.postMessage('go movetime ' + time);
       window.chessEngineWorker.onmessage = (message) => {
+        if (this.isInfoMessage(message)) {
+          console.log('isInfo');
+          this.onInfoMessage(message.data);
+        }
         if (message.data.startsWith('bestmove')) {
           resolve(message.data);
         }

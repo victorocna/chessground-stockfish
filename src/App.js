@@ -3,19 +3,22 @@ import { Chessboard } from './components';
 import { Chess } from './chess';
 import { Stockfish } from './stockfish';
 import { engineMove } from './functions';
+import { InfoMessage } from './components';
 
 // integer between 1-20, where higher is better;
 const DEFAULT_SKILL_LEVEL = 20;
-
-const App = () => {
+const App = ({ verbose }) => {
   const [game] = useState(new Chess());
   const [fen, setFen] = useState(game.fen());
+  const [message, setMessage] = useState(null);
   const [engine] = useState(
     new Stockfish({
       scriptPath: '/stockfish/stockfish.asm.js',
       skillLevel: DEFAULT_SKILL_LEVEL,
+      onInfoMessage: setMessage,
     })
   );
+
   const onMove = async (from, to) => {
     //eslint-disable-next-line
     // TODO: only valid moves
@@ -49,6 +52,7 @@ const App = () => {
       <div className="grid lg:grid-cols-2 gap-4 mb-4">
         <div className="m-4">
           <Chessboard fen={fen} onMove={onMove} coordinates />
+          {verbose ? <InfoMessage message={message} /> : null}
         </div>
       </div>
     </div>

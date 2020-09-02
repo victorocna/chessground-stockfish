@@ -7,7 +7,7 @@ import './coordinates.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App verbose />
   </React.StrictMode>,
   document.getElementById('root')
 );
