@@ -15,7 +15,7 @@ const getScore = (message) => {
     return '0.00';
   }
   const score = Number(message.split(' ')[9]);
-  return String(score / 100);
+  return String(-score / 100);
 };
 const getPV = (message) => {
   if (!message) {
