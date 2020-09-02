@@ -52,7 +52,9 @@ const App = ({ verbose }) => {
       <div className="grid lg:grid-cols-2 gap-4 mb-4">
         <div className="m-4">
           <Chessboard fen={fen} onMove={onMove} coordinates />
-          {verbose ? <InfoMessage message={message} /> : null}
+          {verbose ? (
+            <InfoMessage message={message} engineName={'Stockfish 10 ASM'} />
+          ) : null}
         </div>
       </div>
     </div>

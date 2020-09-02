@@ -1,0 +1,21 @@
+.info-message__container {
+  box-sizing: border-box;
+  width: calc(100% - 5.5px);
+}
+.info-message__top-row,
+.info-message__bottom-row {
+  display: flex;
+}
+
+.info-message__depth,
+.info-message__score {
+  display: inline-block;
+  min-width: 60px;
+}
+.info-message__pv {
+  text-align: justify;
+}
+.info-message__engine-name {
+  flex-grow: 1;
+  font-weight: bold;
+}
