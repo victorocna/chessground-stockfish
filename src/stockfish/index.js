@@ -55,50 +55,26 @@ class Engine {
     );
   }
   async init() {
-    this.logBefore('init');
     await this.use_uci();
     await this.is_ready();
     this.setSkillLevel();
-    this.logAfter('init');
-  }
-  logBefore(command) {
-    //eslint-disable-next-line
-    console.log('logBefore ', command);
-    this.state.count[command]++;
-    this.state.tempTime[command] = new Date();
-  }
-  logAfter(command) {
-    //eslint-disable-next-line
-    console.log('logAfter ', command);
-    this.state.totalTime[command] += new Date() - this.state.tempTime[command];
-    this.state.tempTime[command] = 0;
-    //eslint-disable-next-line
-    console.log(this.state);
   }
   use_uci() {
     return new Promise((resolve) => {
-      this.logBefore('use_uci');
       window.chessEngineWorker.postMessage('uci');
 
       window.chessEngineWorker.onmessage = (message) => {
-        //eslint-disable-next-line
-        console.log(message.data);
         if (message.data === 'uciok') {
-          this.logAfter('use_uci');
           resolve(message);
         }
       };
     });
   }
   is_ready() {
-    this.logBefore('is_ready');
     return new Promise((resolve) => {
       window.chessEngineWorker.postMessage('isready');
       window.chessEngineWorker.onmessage = (message) => {
-        //eslint-disable-next-line
-        console.log(message.data);
         if (message.data === 'readyok') {
-          this.logAfter('is_ready');
           resolve(message);
         }
       };
@@ -106,22 +82,16 @@ class Engine {
   }
   set_position(fen) {
     return new Promise((resolve) => {
-      this.logBefore('set_position');
       window.chessEngineWorker.postMessage('position fen ' + fen);
-      this.logAfter('set_position');
       resolve();
     });
   }
 
   go_depth(depth) {
     return new Promise((resolve) => {
-      this.logBefore('go_depth');
       window.chessEngineWorker.postMessage('go depth ' + depth);
       window.chessEngineWorker.onmessage = (message) => {
-        //eslint-disable-next-line
-        console.log(message.data);
         if (message.data.startsWith('bestmove')) {
-          this.logAfter('go_depth');
           resolve(message.data);
         }
       };
@@ -129,13 +99,9 @@ class Engine {
   }
   go_time(time) {
     return new Promise((resolve) => {
-      this.logBefore('go_time');
       window.chessEngineWorker.postMessage('go movetime ' + time);
       window.chessEngineWorker.onmessage = (message) => {
-        //eslint-disable-next-line
-        console.log(message.data);
         if (message.data.startsWith('bestmove')) {
-          this.logAfter('go_time');
           resolve(message.data);
         }
       };
@@ -149,15 +115,11 @@ class Engine {
   }
 
   stop() {
-    this.logBefore('stop');
     window.chessEngineWorker.postMessage('stop');
-    this.logAfter('stop');
   }
 
   quit() {
-    this.logBefore('quit');
     window.chessEngineWorker.postMessage('quit');
-    this.logAfter('quit');
   }
 }
 //eslint-disable-next-line
