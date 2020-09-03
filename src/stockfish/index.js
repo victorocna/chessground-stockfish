@@ -1,35 +1,17 @@
-// For stockfish, scriptPath should be stockfish.asm.js --> Pay attention to .asm.js
-
+/**
+ * Constructor requires a path to stockfish to run correctly in a web browser
+ */
 class Engine {
-  constructor({ scriptPath, skillLevel, onInfoMessage }) {
+  constructor(props) {
+    const { scriptPath, skillLevel = 20, onInfoMessage } = props || {};
+
     if (!window.chessEngineWorker) {
-      window.chessEngineWorker = new Worker(scriptPath);
+      window.chessEngineWorker = new Worker(
+        scriptPath || '/stockfish/stockfish.asm.js'
+      );
     }
-    this.onInfoMessage = onInfoMessage || console.log;
-    this.skillLevel = skillLevel === 0 ? 0 : skillLevel ? skillLevel : 20;
-    this.activity = this.state = {
-      count: {
-        init: 0,
-        use_uci: 0,
-        is_ready: 0,
-        set_position: 0,
-        go_depth: 0,
-        go_time: 0,
-        stop: 0,
-        quit: 0,
-      },
-      totalTime: {
-        init: 0,
-        use_uci: 0,
-        is_ready: 0,
-        set_position: 0,
-        go_depth: 0,
-        go_time: 0,
-        stop: 0,
-        quit: 0,
-      },
-      tempTime: {},
-    };
+    this.onInfoMessage = onInfoMessage;
+    this.skillLevel = skillLevel;
   }
   isInfoMessage(message) {
     if (!message || !message.data) {
@@ -108,8 +90,10 @@ class Engine {
     return new Promise((resolve) => {
       window.chessEngineWorker.postMessage('go movetime ' + time);
       window.chessEngineWorker.onmessage = (message) => {
-        if (this.isInfoMessage(message)) {
-          console.log('isInfo');
+        if (
+          this.isInfoMessage(message) &&
+          typeof this.onInfoMessage === 'function'
+        ) {
           this.onInfoMessage(message.data);
         }
         if (message.data.startsWith('bestmove')) {
@@ -120,8 +104,6 @@ class Engine {
   }
 
   go_infinite() {
-    //eslint-disable-next-line
-    // TODO: decide if we should implement this
     return null;
   }
 
@@ -133,8 +115,6 @@ class Engine {
     window.chessEngineWorker.postMessage('quit');
   }
 }
-//eslint-disable-next-line
+
 module.exports = Engine;
-//eslint-disable-next-line
 module.exports.Stockfish = Engine;
-// export default Engine;

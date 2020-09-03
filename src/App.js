@@ -5,24 +5,13 @@ import { Stockfish } from './stockfish';
 import { engineMove } from './functions';
 import { InfoMessage } from './components';
 
-// integer between 1-20, where higher is better;
-const DEFAULT_SKILL_LEVEL = 20;
 const App = ({ verbose }) => {
   const [game] = useState(new Chess());
   const [fen, setFen] = useState(game.fen());
   const [message, setMessage] = useState(null);
-  const [engine] = useState(
-    new Stockfish({
-      scriptPath: '/stockfish/stockfish.asm.js',
-      skillLevel: DEFAULT_SKILL_LEVEL,
-      onInfoMessage: setMessage,
-    })
-  );
+  const [engine] = useState(new Stockfish({ onInfoMessage: setMessage }));
 
   const onMove = async (from, to) => {
-    //eslint-disable-next-line
-    // TODO: only valid moves
-
     game.move({ from, to, promotion: 'q' });
     setFen(game.fen());
 
@@ -30,8 +19,6 @@ const App = ({ verbose }) => {
   };
 
   const opponentMove = async () => {
-    //eslint-disable-next-line
-    console.log('opp moved');
     await engine.set_position(game.fen());
     const bestMove = engineMove(await engine.go_time(1000));
 
