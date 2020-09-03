@@ -116,5 +116,4 @@ class Engine {
   }
 }
 
-module.exports = Engine;
-module.exports.Stockfish = Engine;
+export default Engine;

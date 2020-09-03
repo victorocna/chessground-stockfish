@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Chessboard } from './components';
 import { Chess } from './chess';
-import { Stockfish } from './stockfish';
+import Stockfish from './stockfish';
 import { engineMove } from './functions';
 import { InfoMessage } from './components';
 
