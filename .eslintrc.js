@@ -1,5 +1,6 @@
 module.exports = {
   env: {
+    node: true,
     browser: true,
     es2020: true,
   },
@@ -11,9 +12,9 @@ module.exports = {
     ecmaVersion: 11,
     sourceType: 'module',
   },
+  ignorePatterns: ['**/*.asm.js'],
   plugins: ['react'],
   rules: {
-    'no-console': ['error', { allow: ['warn', 'error'] }],
     'no-warning-comments': 'warn',
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',
